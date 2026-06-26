@@ -209,54 +209,126 @@
     }
 
     // 3. FUNGSI LOGIKA DOWNLOAD EXCEL DIINTEGRASIKAN DI SINI
-    document.getElementById('btnExportExcel').addEventListener('click', async function() {
-        try {
-            this.innerText = '⏳ Memproses...';
-            this.disabled = true;
+   document.getElementById('btnExportExcel').addEventListener('click', async function () {
 
-            // Ambil data terbaru langsung dari tabel 'pe' Supabase
-            const { data, error } = await supabase
-                .from('pe')
-                .select('*')
-                .order('NIS', { ascending: false });
+    try {
 
-            if (error) throw error;
+        this.innerText = '⏳ Memproses...';
+        this.disabled = true;
 
-            if (!data || data.length === 0) {
-                alert('Tidak ada data pendaftar untuk diexport.');
-                return;
-            }
+        const { data, error } = await supabase
+            .from('pe')
+            .select('*')
+            .order('NIS', { ascending: true });
 
-            // Memetakan struktur kolom kapital database Anda ke kolom file Excel
-            const dataExcel = data.map(row => {
-                return {
-                    'NIS': row.NIS ?? '',
-                    'Nama Lengkap': row.NAMA ?? '',
-                    'Jurusan/Kelas': row.KELAS ?? '',
-                    'Jenis Kelamin': row.JK ?? '',
-                    'Tempat, Tanggal Lahir': row.TTL ?? '',
-                    'No WhatsApp': row['NO WA'] ?? '',
-                    'Alamat Rumah': row.ALAMAT ?? '',
-                    'Motivasi': row.MOTIVASI ?? ''
-                };
-            });
+        if (error) throw error;
 
-            // Mengonversi data JSON/Array menjadi file spreadsheet Excel asli
-            const worksheet = XLSX.utils.json_to_sheet(dataExcel);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Data Pendaftar");
-
-            // Eksekusi pengunduhan otomatis
-            XLSX.writeFile(workbook, "Data_Pendaftar_PASSUS.xlsx");
-
-        } catch (err) {
-            console.error(err);
-            alert('Gagal membuat Excel: ' + err.message);
-        } finally {
-            this.innerText = 'Export ke Excel';
-            this.disabled = false;
+        if (!data || data.length === 0) {
+            alert('Tidak ada data.');
+            return;
         }
-    });
+
+        const dataExcel = [];
+
+        // Judul
+        dataExcel.push([
+            'DATA PENDAFTAR PASSUS SMK N 1 KEDUNGWUNI'
+        ]);
+
+        // Baris kosong
+        dataExcel.push([]);
+
+        // Header
+        dataExcel.push([
+            'NIS',
+            'Nama Lengkap',
+            'Jurusan',
+            'Jenis Kelamin',
+            'Tempat, Tanggal Lahir',
+            'No WhatsApp',
+            'Alamat',
+            'Motivasi'
+        ]);
+
+        // Isi data
+        data.forEach(row => {
+
+            dataExcel.push([
+                row.NIS ?? '',
+                row.NAMA ?? '',
+                row.KELAS ?? '',
+                row.JK ?? '',
+                row.TTL ?? '',
+                row["NO WA"] ?? '',
+                row.ALAMAT ?? '',
+                row.MOTIVASI ?? ''
+            ]);
+
+        });
+
+        const worksheet = XLSX.utils.aoa_to_sheet(dataExcel);
+
+        // Gabungkan judul
+        worksheet["!merges"] = [
+            {
+                s: { r: 0, c: 0 },
+                e: { r: 0, c: 7 }
+            }
+        ];
+
+        // Lebar kolom
+        worksheet["!cols"] = [
+            { wch: 12 },
+            { wch: 28 },
+            { wch: 20 },
+            { wch: 15 },
+            { wch: 30 },
+            { wch: 18 },
+            { wch: 40 },
+            { wch: 50 }
+        ];
+
+        // Filter pada header
+        worksheet["!autofilter"] = {
+            ref: "A3:H3"
+        };
+
+        // Freeze header
+        worksheet["!freeze"] = {
+            xSplit: 0,
+            ySplit: 3
+        };
+
+        const workbook = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(
+            workbook,
+            worksheet,
+            "Data Pendaftar"
+        );
+
+        const tanggal = new Date().toISOString().slice(0,10);
+
+        XLSX.writeFile(
+            workbook,
+            `Data_Pendaftar_${tanggal}.xlsx`
+        );
+
+    }
+    catch(err){
+
+        console.error(err);
+        alert(err.message);
+
+    }
+    finally{
+
+        this.innerText = "Export ke Excel";
+        this.disabled = false;
+
+    }
+
+});
 
     loadData()
 
