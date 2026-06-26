@@ -8,10 +8,9 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
-    <script>
-document.getElementById("tahun").textContent =
-new Date().getFullYear();
-</script>
+    
+    <!-- 1. LIBRARY EXCEL (SHEETJS) DIMASUKKAN DI SINI -->
+    <script src="https://jsdelivr.net"></script>
 </head>
 
 <body>
@@ -48,8 +47,12 @@ new Date().getFullYear();
     <div class="container">
         <div class="table-container">
 
-            <div class="table-header-flex">
+            <!-- 2. TOMBOL EXPORT DIMASUKKAN DI SINI DI SEBELAH JUDUL -->
+            <div class="table-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <h2>Daftar Calon Anggota Baru</h2>
+                <button id="btnExportExcel" style="padding: 10px 20px; background-color: #2e7d32; color: white; border: none; border-radius: 5px; font-family: 'Poppins', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    📊 Export ke Excel
+                </button>
             </div>
 
             <div class="table-wrapper">
@@ -212,15 +215,69 @@ new Date().getFullYear();
         }
     }
 
+    // 3. FUNGSI LOGIKA DOWNLOAD EXCEL DIINTEGRASIKAN DI SINI
+    document.getElementById('btnExportExcel').addEventListener('click', async function() {
+        try {
+            this.innerText = '⏳ Memproses...';
+            this.disabled = true;
+
+            // Ambil data terbaru langsung dari tabel 'pe' Supabase
+            const { data, error } = await supabase
+                .from('pe')
+                .select('*')
+                .order('NIS', { ascending: false });
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                alert('Tidak ada data pendaftar untuk diexport.');
+                return;
+            }
+
+            // Memetakan struktur kolom kapital database Anda ke kolom file Excel
+            const dataExcel = data.map(row => {
+                return {
+                    'NIS': row.NIS ?? '',
+                    'Nama Lengkap': row.NAMA ?? '',
+                    'Jurusan/Kelas': row.KELAS ?? '',
+                    'Jenis Kelamin': row.JK ?? '',
+                    'Tempat, Tanggal Lahir': row.TTL ?? '',
+                    'No WhatsApp': row['NO WA'] ?? '',
+                    'Alamat Rumah': row.ALAMAT ?? '',
+                    'Motivasi': row.MOTIVASI ?? ''
+                };
+            });
+
+            // Mengonversi data JSON/Array menjadi file spreadsheet Excel asli
+            const worksheet = XLSX.utils.json_to_sheet(dataExcel);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Data Pendaftar");
+
+            // Eksekusi pengunduhan otomatis
+            XLSX.writeFile(workbook, "Data_Pendaftar_PASSUS.xlsx");
+
+        } catch (err) {
+            console.error(err);
+            alert('Gagal membuat Excel: ' + err.message);
+        } finally {
+            this.innerText = '📊 Export ke Excel';
+            this.disabled = false;
+        }
+    });
+
     loadData()
 
     </script>
-<script src="script.js">
+
+    <!-- Skrip pengaturan tahun otomatis diperbaiki agar tidak memicu error selektor -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const elemenTahun = document.getElementById("tahun");
+        if(elemenTahun) {
+            elemenTahun.textContent = new Date().getFullYear();
+        }
+    });
     </script>
-<script>
-document.getElementById("tahun").textContent =
-    new Date().getFullYear();
-</script>
 
 </body>
 </html>
