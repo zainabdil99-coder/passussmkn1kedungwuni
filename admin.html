@@ -265,41 +265,23 @@
             ]);
 
         });
+const worksheet = XLSX.utils.json_to_sheet(dataExcel);
 
-        const worksheet = XLSX.utils.aoa_to_sheet(dataExcel);
+worksheet["!cols"] = [
+    { wch: 12 },
+    { wch: 30 },
+    { wch: 20 },
+    { wch: 15 },
+    { wch: 30 },
+    { wch: 18 },
+    { wch: 40 },
+    { wch: 50 }
+];
 
-        // Gabungkan judul
-        worksheet["!merges"] = [
-            {
-                s: { r: 0, c: 0 },
-                e: { r: 0, c: 7 }
-            }
-        ];
+const workbook = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(workbook, worksheet, "Data Pendaftar");
 
-        // Lebar kolom
-        worksheet["!cols"] = [
-            { wch: 12 },
-            { wch: 28 },
-            { wch: 20 },
-            { wch: 15 },
-            { wch: 30 },
-            { wch: 18 },
-            { wch: 40 },
-            { wch: 50 }
-        ];
-
-        // Filter pada header
-        worksheet["!autofilter"] = {
-            ref: "A3:H3"
-        };
-
-        // Freeze header
-        worksheet["!freeze"] = {
-            xSplit: 0,
-            ySplit: 3
-        };
-
-        const workbook = XLSX.utils.book_new();
+XLSX.writeFile(workbook, "Data_Pendaftar_PASSUS.xlsx");
 
         XLSX.utils.book_append_sheet(
             workbook,
