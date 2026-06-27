@@ -1,301 +1,427 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <script>
+<script>
 if (sessionStorage.getItem("adminLogin") !== "true") {
     window.location.href = "login";
 }
 </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Admin PASSUS SMK N 1 KEDUNGWUNI</title>
-    <link rel="icon" type="image/png" href="passus%20jaya.png">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Panel Admin PASSUS SMK N 1 KEDUNGWUNI</title>
+
+<link rel="icon" type="image/png" href="passus%20jaya.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="admin.css">
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 </head>
 
 <body>
 
-    <div class="sidebar" id="sidebar">
-        <div class="close-btn" onclick="closeMenu()">✕</div>
-        <ul>
-            <li><a href="admin">Data Pendaftar</a></li>
-            <li><a href="daftar">Buka Form Pendaftaran</a></li>
-            <li><a href="logout" onclick="return confirm('Apakah Anda ingin logout?')">Logout dari Admin</a></li>
-        </ul>
-    </div>
+<div class="sidebar" id="sidebar">
 
-    <header>
-        <div class="container">
-            <a href="admin" class="logo-area">
-                <img src="java.png" alt="Logo Kab">
-                <img src="skensa.png" alt="Logo Sekolah">
-                <div class="logo-text">
-                    <h3>PASSUSSKENSA</h3>
-                </div>
-            </a>
-            <div class="menu-btn" onclick="openMenu()">☰</div>
-        </div>
-    </header>
+    <div class="close-btn" onclick="closeMenu()">✕</div>
 
-    <section class="admin-hero">
-        <div class="container">
-            <h1>Halaman Panel Kontrol</h1>
-            <p>Selamat Datang Admin! Di sini Anda dapat memantau, mengubah, dan menghapus data pendaftar.</p>
-        </div>
-    </section>
+    <ul>
+        <li><a href="admin">Data Pendaftar</a></li>
+        <li><a href="daftar">Buka Form Pendaftaran</a></li>
+        <li><a href="logout" onclick="return confirm('Apakah Anda ingin logout?')">Logout dari Admin</a></li>
+    </ul>
 
-    <div class="container">
-        <div class="table-container">
-
-            <!-- 2. TOMBOL EXPORT DIMASUKKAN DI SINI DI SEBELAH JUDUL -->
-            <div class="table-header-flex" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2>Daftar Calon Anggota Baru</h2>
-               <button id="btnExportExcel" class="btn-edit">
-    Export ke Excel
-</button>
-            </div>
-
-            <div class="table-wrapper">
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nama Lengkap</th>
-                            <th>Jurusan</th>
-                            <th>JK</th>
-                            <th>Tempat, Tgl Lahir</th>
-                            <th>No WhatsApp</th>
-                            <th>Alamat Rumah</th>
-                            <th>Motivasi</th>
-                            <th>Aksi Administrasi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="data-pendaftar">
-                        <tr>
-                            <td colspan="9" style="text-align:center; font-weight:600; padding:30px;">
-                                Memuat data...
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
-            </div>
-        </div>
-    </div>
-
-   <footer>
-    <div class="footer-container">
-        <div class="footer-info">
-            <h3>PASSUSSKENSA</h3>
-            <h3>JAYA</h3>
-        </div>
-        <div class="footer-links">
-            <h4>Sosial Media</h4>
-            <ul>
-                <li><a href="https://www.tiktok.com/@passusskensa?_r=1&_t=ZS-96RBIqBUyvM"><strong>Tiktok</strong></a></li>
-                <li><a href="https://www.instagram.com/passusskensa?igsh=b3UyeTU0ZHU3bnky"><strong>Instagram</strong></a></li>
-            </ul>
-        </div>
-        <div class="footer-contact">
-            <h4>Hubungi Kami</h4>
-            <p><strong>Alamat:</strong> Jl. Paesan Utara, RT.01/RW.05, Dusun Paesan, Kedungwuni Barat, Kec. Kedungwuni, Kab. Pekalongan, Jawa Tengah</p>
-            <p><strong>Email:</strong> passusskensa29@gmail.com</p>
-            <p><strong>No Telpon:</strong> +62 857 4177 1410</p>
-        </div>
-    </div>
- <div class="footer-bottom">
-<p>&copy; <span id="tahun"></span> PASSUSSKENSA</p>
 </div>
+
+<header>
+
+<div class="container">
+
+<a href="admin" class="logo-area">
+
+<img src="java.png" alt="Logo Kabupaten">
+
+<img src="skensa.png" alt="Logo Sekolah">
+
+<div class="logo-text">
+<h3>PASSUSSKENSA</h3>
+</div>
+
+</a>
+
+<div class="menu-btn" onclick="openMenu()">☰</div>
+
+</div>
+
+</header>
+
+<section class="admin-hero">
+
+<div class="container">
+
+<h1>Halaman Panel Kontrol</h1>
+
+<p>
+Selamat Datang Admin!
+Di sini Anda dapat memantau,
+mengubah,
+dan menghapus data pendaftar.
+</p>
+
+</div>
+
+</section>
+
+<div class="container">
+
+<div class="table-container">
+
+<div class="table-header-flex"
+style="display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;">
+
+<h2>Daftar Calon Anggota Baru</h2>
+
+<button
+id="btnExportExcel"
+class="btn-edit">
+
+Export ke Excel
+
+</button>
+
+</div>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Nama Lengkap</th>
+<th>Jurusan</th>
+<th>JK</th>
+<th>Tempat, Tgl Lahir</th>
+<th>No WhatsApp</th>
+<th>Alamat Rumah</th>
+<th>Motivasi</th>
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+<tbody id="data-pendaftar">
+
+<tr>
+
+<td colspan="8"
+style="
+text-align:center;
+padding:30px;
+font-weight:600;">
+
+Memuat data...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+
+<div class="footer-container">
+
+<div class="footer-info">
+
+<h3>PASSUSSKENSA</h3>
+
+<h3>JAYA</h3>
+
+</div>
+
+<div class="footer-links">
+
+<h4>Sosial Media</h4>
+
+<ul>
+
+<li>
+
+<a href="https://www.tiktok.com/@passusskensa?_r=1&_t=ZS-96RBIqBUyvM">
+<strong>Tiktok</strong>
+</a>
+
+</li>
+
+<li>
+
+<a href="https://www.instagram.com/passusskensa?igsh=b3UyeTU0ZHU3bnky">
+<strong>Instagram</strong>
+</a>
+
+</li>
+
+</ul>
+
+</div>
+
+<div class="footer-contact">
+
+<h4>Hubungi Kami</h4>
+
+<p>
+
+<strong>Alamat:</strong>
+
+Jl. Paesan Utara,
+RT.01/RW.05,
+Dusun Paesan,
+Kedungwuni Barat,
+Kab. Pekalongan,
+Jawa Tengah
+
+</p>
+
+<p>
+
+<strong>Email:</strong>
+
+passusskensa29@gmail.com
+
+</p>
+
+<p>
+
+<strong>No Telpon:</strong>
+
++62 857 4177 1410
+
+</p>
+
+</div>
+
+</div>
+
+<div class="footer-bottom">
+
+<p>
+
+&copy;
+<span id="tahun"></span>
+PASSUSSKENSA
+
+</p>
+
+</div>
+
 </footer>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
-    <script type="module">
+<script type="module">
 
-    import { createClient }
-    from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-    const supabase = createClient(
-        'https://ydbulmagtgihrxxxqsmx.supabase.co',
-        'sb_publishable_vZOuRgZG51J0vWzfdXQkvQ_EifaEX3J'
-    )
+const supabase = createClient(
+'https://ydbulmagtgihrxxxqsmx.supabase.co',
+'sb_publishable_vZOuRgZG51J0vWzfdXQkvQ_EifaEX3J'
+);
 
-    const tbody = document.getElementById('data-pendaftar')
+const tbody =
+document.getElementById("data-pendaftar");
 
-    async function loadData() {
+async function loadData(){
 
-        const { data, error } = await supabase
-            .from('pe')
-            .select('*')
-        if (error) {
+const {data,error}=await supabase
+.from("pe")
+.select("*")
+.order("id",{ascending:true});
 
-            tbody.innerHTML = `
-            <tr>
-                <td colspan="9" style="text-align:center;padding:30px;">
-                    ${error.message}
-                </td>
-            </tr>
-            `
-            return
-        }
+if(error){
 
-        if (!data || data.length === 0) {
+tbody.innerHTML=`
+<tr>
+<td colspan="8"
+style="padding:30px;text-align:center;">
+${error.message}
+</td>
+</tr>
+`;
 
-            tbody.innerHTML = `
-            <tr>
-                <td colspan="9" style="text-align:center;font-weight:600;padding:30px;">
-                    Belum ada pendaftar yang mengirimkan data.
-                </td>
-            </tr>
-            `
-            return
-        }
+return;
 
-        tbody.innerHTML = ''
+}
 
-        data.forEach(row => {
+if(data.length===0){
 
-            tbody.innerHTML += `
-            <tr>
+tbody.innerHTML=`
+<tr>
+<td colspan="8"
+style="padding:30px;text-align:center;">
+Belum ada data.
+</td>
+</tr>
+`;
 
-                <td>${row.NAMA ?? ''}</td>
-                <td>${row.KELAS ?? ''}</td>
-                <td>${row.JK ?? ''}</td>
-                <td>${row.TTL ?? ''}</td>
-                <td>${row["NO WA"] ?? ''}</td>
-                <td>${row.ALAMAT ?? ''}</td>
-                <td>${row.MOTIVASI ?? ''}</td>
+return;
 
-                <td style="white-space: nowrap;">
+}
 
-                    <a href="#"
-                       class="btn-action btn-delete"
-                       onclick="hapusData('${row.NIS}')">
-                        Hapus
-                    </a>
+tbody.innerHTML="";
 
-                </td>
+data.forEach(row=>{
 
-            </tr>
-            `
-        })
+tbody.innerHTML+=`
+
+<tr>
+
+<td>${row.NAMA ?? ""}</td>
+
+<td>${row.KELAS ?? ""}</td>
+
+<td>${row.JK ?? ""}</td>
+
+<td>${row.TTL ?? ""}</td>
+
+<td>${row["NO WA"] ?? ""}</td>
+
+<td>${row.ALAMAT ?? ""}</td>
+
+<td>${row.MOTIVASI ?? ""}</td>
+
+<td>
+
+<a
+href="#"
+class="btn-action btn-delete"
+onclick="hapusData('${row.id}')">
+
+Hapus
+
+</a>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+    window.hapusData = async function(id){
+
+    if(!confirm("Yakin ingin menghapus data ini?")){
+        return;
     }
 
-    window.hapusData = async function(nis) {
+    const { error } = await supabase
+        .from("pe")
+        .delete()
+        .eq("id", id);
 
-        if (!confirm('Yakin ingin menghapus data siswa ini?')) {
-            return
-        }
-
-        const { error } = await supabase
-            .from('pe')
-            .delete()
-
-        if (error) {
-
-            alert('Gagal menghapus: ' + error.message)
-
-        } else {
-
-            alert('Data berhasil dihapus!')
-            loadData()
-
-        }
+    if(error){
+        alert("Gagal menghapus : " + error.message);
+    }else{
+        alert("Data berhasil dihapus!");
+        loadData();
     }
 
-  document.getElementById('btnExportExcel').addEventListener('click', async function () {
+};
 
-    try {
 
-        this.innerText = '⏳ Memproses...';
+// ================= EXPORT EXCEL =================
+
+document.getElementById("btnExportExcel").addEventListener("click", async function(){
+
+    try{
+
         this.disabled = true;
+        this.innerText = "⏳ Memproses...";
 
         const { data, error } = await supabase
-            .from('pe')
-            .select('*')
-            .order('NIS', { ascending: true });
+            .from("pe")
+            .select("*")
+            .order("NAMA",{ascending:true});
 
-        if (error) throw error;
+        if(error) throw error;
 
-        if (!data || data.length === 0) {
-            alert('Tidak ada data.');
+        if(!data || data.length===0){
+            alert("Tidak ada data.");
             return;
         }
 
         const dataExcel = [];
 
-        // Judul
         dataExcel.push([
-            'DATA PENDAFTAR PASSUS SMK N 1 KEDUNGWUNI'
+            "DATA PENDAFTAR PASSUS SMK N 1 KEDUNGWUNI"
         ]);
 
-        // Baris kosong
         dataExcel.push([]);
 
-        // Header
         dataExcel.push([
-            'NIS',
-            'Nama Lengkap',
-            'Jurusan',
-            'Jenis Kelamin',
-            'Tempat, Tanggal Lahir',
-            'No WhatsApp',
-            'Alamat',
-            'Motivasi'
+            "Nama Lengkap",
+            "Jurusan",
+            "Jenis Kelamin",
+            "Tempat, Tanggal Lahir",
+            "No WhatsApp",
+            "Alamat",
+            "Motivasi"
         ]);
 
-        // Isi data
-        data.forEach(row => {
+        data.forEach(row=>{
 
             dataExcel.push([
-                row.NIS ?? '',
-                row.NAMA ?? '',
-                row.KELAS ?? '',
-                row.JK ?? '',
-                row.TTL ?? '',
-                row["NO WA"] ?? '',
-                row.ALAMAT ?? '',
-                row.MOTIVASI ?? ''
+                row.NAMA ?? "",
+                row.KELAS ?? "",
+                row.JK ?? "",
+                row.TTL ?? "",
+                row["NO WA"] ?? "",
+                row.ALAMAT ?? "",
+                row.MOTIVASI ?? ""
             ]);
 
         });
 
         const worksheet = XLSX.utils.aoa_to_sheet(dataExcel);
 
-        // Gabungkan judul
-        worksheet["!merges"] = [
+        worksheet["!merges"]=[
             {
-                s: { r: 0, c: 0 },
-                e: { r: 0, c: 7 }
+                s:{r:0,c:0},
+                e:{r:0,c:6}
             }
         ];
 
-        // Lebar kolom
-        worksheet["!cols"] = [
-            { wch: 12 },
-            { wch: 28 },
-            { wch: 20 },
-            { wch: 15 },
-            { wch: 30 },
-            { wch: 18 },
-            { wch: 40 },
-            { wch: 50 }
+        worksheet["!cols"]=[
+            {wch:30},
+            {wch:20},
+            {wch:18},
+            {wch:30},
+            {wch:20},
+            {wch:40},
+            {wch:50}
         ];
 
-        // Filter pada header
-        worksheet["!autofilter"] = {
-            ref: "A3:H3"
-        };
-
-        // Freeze header
-        worksheet["!freeze"] = {
-            xSplit: 0,
-            ySplit: 3
+        worksheet["!autofilter"]={
+            ref:"A3:G3"
         };
 
         const workbook = XLSX.utils.book_new();
@@ -306,37 +432,49 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
             "Data Pendaftar"
         );
 
-        const tanggal = new Date().toISOString().slice(0,10);
+        const tanggal = new Date()
+            .toISOString()
+            .slice(0,10);
 
         XLSX.writeFile(
             workbook,
             `Data_Pendaftar_${tanggal}.xlsx`
         );
 
-    }
-    catch(err){
+    }catch(err){
 
         console.error(err);
         alert(err.message);
 
-    }
-    finally{
+    }finally{
 
-        this.innerText = "Export ke Excel";
         this.disabled = false;
+        this.innerText = "Export ke Excel";
 
     }
 
 });
-    <!-- Skrip pengaturan tahun otomatis diperbaiki agar tidak memicu error selektor -->
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const elemenTahun = document.getElementById("tahun");
-        if(elemenTahun) {
-            elemenTahun.textContent = new Date().getFullYear();
-        }
-    });
-    </script>
+
+
+// ================= LOAD DATA =================
+
+loadData();
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+    const tahun=document.getElementById("tahun");
+
+    if(tahun){
+        tahun.textContent=new Date().getFullYear();
+    }
+
+});
+
+</script>
 
 </body>
 </html>
