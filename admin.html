@@ -63,7 +63,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
                 <table>
                     <thead>
                         <tr>
-                            <th>NIS</th>
                             <th>Nama Lengkap</th>
                             <th>Jurusan</th>
                             <th>JK</th>
@@ -133,8 +132,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         const { data, error } = await supabase
             .from('pe')
             .select('*')
-            .order('NIS', { ascending: false })
-
         if (error) {
 
             tbody.innerHTML = `
@@ -166,7 +163,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
             tbody.innerHTML += `
             <tr>
 
-                <td><strong>${row.NIS ?? ''}</strong></td>
                 <td>${row.NAMA ?? ''}</td>
                 <td>${row.KELAS ?? ''}</td>
                 <td>${row.JK ?? ''}</td>
@@ -199,7 +195,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         const { error } = await supabase
             .from('pe')
             .delete()
-            .eq('NIS', nis)
 
         if (error) {
 
@@ -224,8 +219,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         const { data, error } = await supabase
             .from('pe')
             .select('*')
-            .order('NIS', { ascending: true });
-
         if (error) throw error;
 
         if (!data || data.length === 0) {
@@ -259,7 +252,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         data.forEach(row => {
 
             dataExcel.push([
-                row.NIS ?? '',
                 row.NAMA ?? '',
                 row.KELAS ?? '',
                 row.JK ?? '',
@@ -273,7 +265,6 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
 const worksheet = XLSX.utils.json_to_sheet(dataExcel);
 
 worksheet["!cols"] = [
-    { wch: 12 },
     { wch: 30 },
     { wch: 20 },
     { wch: 15 },
