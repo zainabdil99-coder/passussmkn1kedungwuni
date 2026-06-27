@@ -208,8 +208,7 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         }
     }
 
-    // 3. FUNGSI LOGIKA DOWNLOAD EXCEL DIINTEGRASIKAN DI SINI
-   document.getElementById('btnExportExcel').addEventListener('click', async function () {
+  document.getElementById('btnExportExcel').addEventListener('click', async function () {
 
     try {
 
@@ -219,6 +218,8 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         const { data, error } = await supabase
             .from('pe')
             .select('*')
+            .order('NIS', { ascending: true });
+
         if (error) throw error;
 
         if (!data || data.length === 0) {
@@ -252,6 +253,7 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
         data.forEach(row => {
 
             dataExcel.push([
+                row.NIS ?? '',
                 row.NAMA ?? '',
                 row.KELAS ?? '',
                 row.JK ?? '',
@@ -262,22 +264,41 @@ if (sessionStorage.getItem("adminLogin") !== "true") {
             ]);
 
         });
-const worksheet = XLSX.utils.json_to_sheet(dataExcel);
 
-worksheet["!cols"] = [
-    { wch: 30 },
-    { wch: 20 },
-    { wch: 15 },
-    { wch: 30 },
-    { wch: 18 },
-    { wch: 40 },
-    { wch: 50 }
-];
+        const worksheet = XLSX.utils.aoa_to_sheet(dataExcel);
 
-const workbook = XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(workbook, worksheet, "Data Pendaftar");
+        // Gabungkan judul
+        worksheet["!merges"] = [
+            {
+                s: { r: 0, c: 0 },
+                e: { r: 0, c: 7 }
+            }
+        ];
 
-XLSX.writeFile(workbook, "Data_Pendaftar_PASSUS.xlsx");
+        // Lebar kolom
+        worksheet["!cols"] = [
+            { wch: 12 },
+            { wch: 28 },
+            { wch: 20 },
+            { wch: 15 },
+            { wch: 30 },
+            { wch: 18 },
+            { wch: 40 },
+            { wch: 50 }
+        ];
+
+        // Filter pada header
+        worksheet["!autofilter"] = {
+            ref: "A3:H3"
+        };
+
+        // Freeze header
+        worksheet["!freeze"] = {
+            xSplit: 0,
+            ySplit: 3
+        };
+
+        const workbook = XLSX.utils.book_new();
 
         XLSX.utils.book_append_sheet(
             workbook,
@@ -307,11 +328,6 @@ XLSX.writeFile(workbook, "Data_Pendaftar_PASSUS.xlsx");
     }
 
 });
-
-    loadData()
-
-    </script>
-
     <!-- Skrip pengaturan tahun otomatis diperbaiki agar tidak memicu error selektor -->
     <script>
     document.addEventListener("DOMContentLoaded", function() {
